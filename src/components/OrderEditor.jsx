@@ -1,36 +1,46 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 const OrderEditor = () => {
-  const [menu, setMenu] = useState('');
-  const [address, setAddress] = useState('');
-  const [text, setText] = useState('');
+  const [state, setState] = useState({
+    menu: '',
+    address: '',
+    request: '',
+  });
+  const addressRef = useRef();
 
-  const onChangeMenu = (e) => {
-    setMenu(e.target.value);
-  };
-
-  const onChangeAddress = (e) => {
-    setAddress(e.target.value);
-  };
-
-  const onChangeText = (e) => {
-    setText(e.target.value);
+  const onChangeState = (e) => {
+    setState({
+      ...state,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const onSubmit = () => {
+    if (addressRef.current.value === '') {
+      addressRef.current.focus();
+      return;
+    }
     alert(
-      `주문이 완료되었습니다 메뉴 : ${menu}, 주소 : ${address}, 요청사항${text}`
+      `주문이 완료되었습니다 메뉴 : ${state.menu}, 주소 : ${state.address}, 요청사항${state.request}`
     );
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 10,
+      }}
+    >
       <h2>배달의민족 주문</h2>
       <div>
-        <div style={{ marginBottom: 5, fontSize: 14 }}>메뉴 선택</div>
+        <div style={{ marginBottom: 5, fontSize: 14 }}>
+          메뉴 선택
+        </div>
         <select
-          value={menu}
-          onChange={onChangeMenu}
+          name="menu"
+          onChange={state.menu}
           style={{ width: 300, padding: 5 }}
         >
           <option value={'족발'}>족발</option>
@@ -40,25 +50,34 @@ const OrderEditor = () => {
         </select>
       </div>
       <div>
-        <div style={{ marginBottom: 5, fontSize: 14 }}>배달 주소</div>
+        <div style={{ marginBottom: 5, fontSize: 14 }}>
+          배달 주소
+        </div>
         <input
-          value={address}
-          onChange={onChangeAddress}
+          ref={addressRef}
+          name="address"
+          value={state.address}
           style={{ width: 300, padding: 5 }}
           placeholder="주소) 서울특별시 xx동 .."
         />
       </div>
       <div>
-        <div style={{ marginBottom: 5, fontSize: 14 }}>배달 요청사항</div>
+        <div style={{ marginBottom: 5, fontSize: 14 }}>
+          배달 요청사항
+        </div>
         <textarea
-          value={text}
-          onChange={onChangeText}
+          name="reqeust"
+          value={state.request}
+          onChange={onChangeState}
           style={{ width: 300, padding: 5 }}
           placeholder="배달 요청사항을 써 주세요..."
         />
       </div>
       <div>
-        <button onClick={onSubmit} style={{ width: 300, padding: 5 }}>
+        <button
+          onClick={onSubmit}
+          style={{ width: 300, padding: 5 }}
+        >
           주문 완료
         </button>
       </div>
